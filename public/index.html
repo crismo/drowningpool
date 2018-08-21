@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Drowning Pool</title>
+</head>
+
+<body>
+
+    <label for="studentName">Name:</label>
+    <input type="text" placeholder="name" id="studentName" />
+    <button id="submitButton" onclick="collectName()">Submit</button>
+
+    <script>
+        const DEBUG = false;
+
+        function collectName() {
+            let studentName = document.getElementById("studentName").value;
+            log(`Student name ${studentName}`);
+            
+            let url = `/app/student`;
+            
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({studentName:studentName})
+            }).then(data => {
+                return data.json();
+            }).then(json => {
+                
+                let div = document.createElement("div");
+                div.innerText = json;
+                document.body.appendChild(div);
+
+
+            }).catch(err =>{
+
+            });
+
+        }
+
+
+        function log(msg) {
+            if (DEBUG) {
+                console.log(msg);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
