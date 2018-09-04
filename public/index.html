@@ -13,38 +13,43 @@
 
     <label for="studentName">Name:</label>
     <input type="text" placeholder="name" id="studentName" />
-    <button id="submitButton" onclick="collectName()">Submit</button>
+    <button id="submitButton" onclick="updateQue()">Submit</button>
+
+    <ol id="studentList">
+
+    </ol>
 
     <script>
         const DEBUG = false;
+        const ADD_STUDENT_ENDPOINT = `/app/student`;
 
-        function collectName() {
+        function updateQue() {
             let studentName = document.getElementById("studentName").value;
-            log(`Student name ${studentName}`);
-            
-            let url = `/app/student`;
-            
-            fetch(url, {
+            sendAndResiveStudentNames(studentName).then(students => {
+                let list = document.getElementById("studentList");
+                list.innerHTML = "";
+                students.forEach(student => {
+                    let div = document.createElement("li");
+                    div.innerText = student;
+                    list.appendChild(div);
+                });
+                
+            }).catch(err =>{
+
+            });;
+        }
+
+        function sendAndResiveStudentNames(name){
+            return fetch(ADD_STUDENT_ENDPOINT, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
                 },
-                body: JSON.stringify({studentName:studentName})
+                body: JSON.stringify({studentName:name})
             }).then(data => {
                 return data.json();
-            }).then(json => {
-                
-                let div = document.createElement("div");
-                div.innerText = json;
-                document.body.appendChild(div);
-
-
-            }).catch(err =>{
-
             });
-
         }
-
 
         function log(msg) {
             if (DEBUG) {

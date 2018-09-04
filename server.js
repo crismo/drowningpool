@@ -4,7 +4,7 @@ const app = express();
 
 let studentNames = [];
 
-app.set('port', (process.env.PORT || 9090));
+app.set('port', (process.env.PORT || 8080));
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
