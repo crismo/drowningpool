@@ -22,30 +22,46 @@
     <script>
         const DEBUG = false;
         const ADD_STUDENT_ENDPOINT = `/app/student`;
+        const NAMES_LIST_ELEMENT = "studentList";
+        const INPUT_NAME_ELEMENT = "studentName"
 
         function updateQue() {
-            let studentName = document.getElementById("studentName").value;
+            
+            ///TODO: Input validation
+            let studentName = document.getElementById(INPUT_NAME_ELEMENT).value;
+            
             sendAndResiveStudentNames(studentName).then(students => {
-                let list = document.getElementById("studentList");
-                list.innerHTML = "";
-                students.forEach(student => {
-                    let div = document.createElement("li");
-                    div.innerText = student;
-                    list.appendChild(div);
-                });
                 
-            }).catch(err =>{
+                listStudentNamesInTarget(students,NAMES_LIST_ELEMENT)
+
+            }).catch(err => {
+                ///TODO: Better error handling.
+                console.error(err);
 
             });;
         }
 
-        function sendAndResiveStudentNames(name){
+        function listStudentNamesInTarget(studentNames, target) {
+            
+            let list = document.getElementById(target);
+            list.innerHTML = "";
+
+            studentNames.forEach(student => {
+                let li = document.createElement("li");
+                li.innerText = student;
+                list.appendChild(li);
+            });
+        }
+
+        function sendAndResiveStudentNames(name) {
             return fetch(ADD_STUDENT_ENDPOINT, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
                 },
-                body: JSON.stringify({studentName:name})
+                body: JSON.stringify({
+                    studentName: name
+                })
             }).then(data => {
                 return data.json();
             });
