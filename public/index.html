@@ -21,9 +21,27 @@
 
     <script>
         const DEBUG = false;
-        const ADD_STUDENT_ENDPOINT = `/app/student`;
+        const ADD_STUDENT_ENDPOINT = '/app/student';
+        const GET_STUDENTS_ENDPOINT = '/app/students';
         const NAMES_LIST_ELEMENT = "studentList";
-        const INPUT_NAME_ELEMENT = "studentName"
+        const INPUT_NAME_ELEMENT = "studentName";
+
+
+
+        (function(){
+            getRefreshedStudentList();
+        })();
+
+        function getRefreshedStudentList(){
+            fetch(GET_STUDENTS_ENDPOINT).then(data => {
+                return data.json();
+            }).then(students =>{
+                listStudentNamesInTarget(students,NAMES_LIST_ELEMENT)
+            });
+        }
+       
+
+
 
         function updateQue() {
             

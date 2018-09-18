@@ -8,6 +8,17 @@ app.set('port', (process.env.PORT || 8080));
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
+
+
+app.get('/app/students', function(req,res, next){
+
+    res.json(studentNames).end();
+
+});
+
+
+
+
 app.post('/app/student', function (req,res,next){
     let studentName = req.body.studentName;
 
@@ -18,6 +29,7 @@ app.post('/app/student', function (req,res,next){
         res.status(200).json(studentNames).end();
     } else{
         res.status(400).json(studentNames).end();
+        res.se
     }
 });
 

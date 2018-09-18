@@ -1,0 +1,20 @@
+
+METHOTD: POST
+Encoding: UTF-8 (16,32)
+Endpoint: app/student
+Request: body (json) -> {name:"given name"}
+Respons: [{student}]
+
+METHOTD: GET
+Encoding: UTF-8 (16,32)
+Endpoint: app/student/:ID
+Respons: [{student}]
+
+
+Student:
+{
+    firstName:"string",
+    secomndName:"string",
+    ...
+}
+
