@@ -2,12 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 
+
+
 let studentNames = [];
 
 app.set('port', (process.env.PORT || 8080));
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
+console.log(process.env.SUPER_SECRET_SALT);
 
 
 app.get('/app/students', function(req,res, next){
@@ -15,9 +18,6 @@ app.get('/app/students', function(req,res, next){
     res.json(studentNames).end();
 
 });
-
-
-
 
 app.post('/app/student', function (req,res,next){
     let studentName = req.body.studentName;
