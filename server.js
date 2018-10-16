@@ -1,16 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-
-
+const db = require("./js/db.js"); 
+const user = require("./js/user.js");
 
 let studentNames = [];
 
 app.set('port', (process.env.PORT || 8080));
 app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(user);
 
-console.log(process.env.SUPER_SECRET_SALT);
+
 
 
 app.get('/app/students', function(req,res, next){
