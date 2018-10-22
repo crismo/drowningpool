@@ -1,5 +1,6 @@
 var express = require('express')
 var router = express.Router();
+var db = require("./db.js");
 
 router.get('/app/users',function(req,res,next){
     let query = "Select * from Users";
@@ -7,9 +8,10 @@ router.get('/app/users',function(req,res,next){
     if(users){
         res.status(200).json(JSON.parse(users));
     }else{
-        //???
+        //????
     }
 });
+
 
 router.post('/app/user',function(req,res,next){
 
