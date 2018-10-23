@@ -21,8 +21,8 @@
 
     <script>
         const DEBUG = false;
-        const ADD_STUDENT_ENDPOINT = '/app/student';
-        const GET_STUDENTS_ENDPOINT = '/app/students';
+        const ADD_REQUEST_ENDPOINT = '/app/request';
+        const GET_REQUESTS_ENDPOINT = '/app/requests';
         const NAMES_LIST_ELEMENT = "studentList";
         const INPUT_NAME_ELEMENT = "studentName";
 
@@ -32,7 +32,7 @@
         })();
 
         function getRefreshedStudentList(){
-            fetch(GET_STUDENTS_ENDPOINT).then(data => {
+            fetch(GET_REQUESTS_ENDPOINT).then(data => {
                 return data.json();
             }).then(students =>{
                 listStudentNamesInTarget(students,NAMES_LIST_ELEMENT)
@@ -69,7 +69,7 @@
         }
 
         function sendAndResiveStudentNames(name) {
-            return fetch(ADD_STUDENT_ENDPOINT, {
+            return fetch(ADD_REQUEST_ENDPOINT, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
