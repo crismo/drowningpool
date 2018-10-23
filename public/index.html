@@ -10,85 +10,121 @@
 </head>
 
 <body>
+    <div id="content">
 
-    <label for="studentName">Name:</label>
-    <input type="text" placeholder="name" id="studentName" />
-    <button id="submitButton" onclick="updateQue()">Submit</button>
+    </div>
+    <template id="addRequestTemplate">
+        <form>
+            <label for="description">Description:</label>
+            <input type="text" id="description">
+            <button id="submitRequest" type="button">Submit</button>
+        </form>
+    </template>
 
-    <ol id="studentList">
+    <template id="authenticateUserUITemplate">
+        <form>
+            <label for="userName">User name:</label>
+            <input type="text" id="userName">
 
-    </ol>
+            <label for="password">Password:</label>
+            <input type="password" id="password">
 
-    <script>
-        const DEBUG = false;
-        const ADD_REQUEST_ENDPOINT = '/app/request';
-        const GET_REQUESTS_ENDPOINT = '/app/requests';
-        const NAMES_LIST_ELEMENT = "studentList";
-        const INPUT_NAME_ELEMENT = "studentName";
+            <label for="rememberMe">Remember Me:</label>
+            <input type="checkbox" id="rememberMe">
 
+            <button type="button" id="loginBt">Login</button>
+            <button type="button" id="createUserBt">Create User</button>
+        </form>
 
-        (function(){
-            getRefreshedStudentList();
-        })();
+    </template>
 
-        function getRefreshedStudentList(){
-            fetch(GET_REQUESTS_ENDPOINT).then(data => {
-                return data.json();
-            }).then(students =>{
-                listStudentNamesInTarget(students,NAMES_LIST_ELEMENT)
-            });
-        }
-       
+    <template id="createUserUITemplate">
+        <form>
+            <label for="userName">User name:</label>
+            <input type="text" id="userName">
 
-        function updateQue() {
-            
-            ///TODO: Input validation
-            let studentName = document.getElementById(INPUT_NAME_ELEMENT).value;
-            
-            sendAndResiveStudentNames(studentName).then(students => {
-                
-                listStudentNamesInTarget(students,NAMES_LIST_ELEMENT)
+            <label for="email">E-mail:</label>
+            <input type="email" id="email">
 
-            }).catch(err => {
-                ///TODO: Better error handling.
-                console.error(err);
+            <label for="password">Password:</label>
+            <input type="password" id="password">
 
-            });;
-        }
+            <button type="button">Create</button>
+        </form>
 
-        function listStudentNamesInTarget(studentNames, target) {
-            
-            let list = document.getElementById(target);
-            list.innerHTML = "";
-
-            studentNames.forEach(student => {
-                let li = document.createElement("li");
-                li.innerText = student;
-                list.appendChild(li);
-            });
-        }
-
-        function sendAndResiveStudentNames(name) {
-            return fetch(ADD_REQUEST_ENDPOINT, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-                },
-                body: JSON.stringify({
-                    studentName: name
-                })
-            }).then(data => {
-                return data.json();
-            });
-        }
-
-        function log(msg) {
-            if (DEBUG) {
-                console.log(msg);
-            }
-        }
-    </script>
+    </template>
 
 </body>
+    <script>
+        let authenticatedUser = null;
+        
+        (function () {
+            if (! authenticatedUser) {
+                displayLoginForm();
+            } else{
+                displaySubmitRequestForm();
+            }
+        })();
+
+        function addElement(element){
+            document.getElementById("content").appendChild(element);
+        }
+
+        function clearScreen(){
+            document.getElementById("content").innerHTML = "";
+        }
+
+        function createElementFromTemplate(templateID){
+            let template = document.querySelector(templateID);
+            let clone = document.importNode(template.content, true);
+            return clone
+        }
+
+        function displayLoginForm(){
+            
+            let loginForm = createElementFromTemplate("#authenticateUserUITemplate")
+            //loginForm = window.document.body.appendChild(loginForm);
+            addElement(loginForm);
+
+            let loginBt = document.querySelector("#loginBt");
+            let createBt = document.querySelector("#createUserBt");
+
+            loginBt.onclick = function(evt){
+                console.log("Login bt clicked")
+                
+                let username = document.getElementById("userName").value;
+                let password = document.getElementById("password").value;
+
+                if(username.length > 1 && password.length > 1){
+
+
+
+                } else{
+                    alert("Danger! Danger You are a hacker ;)");
+                }
+
+            }
+
+            createBt.onclick = function(evt){
+                clearScreen();
+                displayCreateUserForm();
+                console.log("Create user bt clicked")
+            }
+
+        }
+
+        function displayCreateUserForm(){
+            let element = createElementFromTemplate("#createUserUITemplate")
+            window.document.body.appendChild(element);
+           
+        }
+
+        function displaySubmitRequestForm(){
+
+        }
+   
+   </script>
+
+
 
 </html>

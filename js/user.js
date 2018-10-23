@@ -12,7 +12,6 @@ router.get('/app/users',function(req,res,next){
     }
 });
 
-
 router.post('/app/user',function(req,res,next){
 
     let userEmail = req.body.email;
@@ -26,6 +25,24 @@ router.post('/app/user',function(req,res,next){
     let code = db.insert(query) ? 200:500;
     res.status(code).json({}).end()
 })
+
+router.get('/app/user/:userName',function(req,res,next){
+
+    let paswordHash = req.body.pswHash;
+    let userName = req.params["userName"];
+
+    let query = `Select * from Users where userName='${userName}' 
+    and hash='${paswordHash}'`;
+
+    let user = db.select(query) ;
+
+    if(user){
+        res.status(200).json(user).end()
+    } else{
+        res.status(401).json({}).end();
+    }
+})
+
 
 
 

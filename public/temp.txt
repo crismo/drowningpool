@@ -1,0 +1,70 @@
+
+    <script>
+        const DEBUG = false;
+        const ADD_REQUEST_ENDPOINT = '/app/request';
+        const GET_REQUESTS_ENDPOINT = '/app/requests';
+        const NAMES_LIST_ELEMENT = "studentList";
+        const INPUT_NAME_ELEMENT = "studentName";
+
+
+        (function () {
+            getRefreshedStudentList();
+        })();
+
+        function getRefreshedStudentList() {
+            fetch(GET_REQUESTS_ENDPOINT).then(data => {
+                return data.json();
+            }).then(students => {
+                listStudentNamesInTarget(students, NAMES_LIST_ELEMENT)
+            });
+        }
+
+
+        function updateQue() {
+
+            ///TODO: Input validation
+            let studentName = document.getElementById(INPUT_NAME_ELEMENT).value;
+
+            sendAndResiveStudentNames(studentName).then(students => {
+
+                listStudentNamesInTarget(students, NAMES_LIST_ELEMENT)
+
+            }).catch(err => {
+                ///TODO: Better error handling.
+                console.error(err);
+
+            });;
+        }
+
+        function listStudentNamesInTarget(studentNames, target) {
+
+            let list = document.getElementById(target);
+            list.innerHTML = "";
+
+            studentNames.forEach(student => {
+                let li = document.createElement("li");
+                li.innerText = student;
+                list.appendChild(li);
+            });
+        }
+
+        function sendAndResiveStudentNames(name) {
+            return fetch(ADD_REQUEST_ENDPOINT, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    studentName: name
+                })
+            }).then(data => {
+                return data.json();
+            });
+        }
+
+        function log(msg) {
+            if (DEBUG) {
+                console.log(msg);
+            }
+        }
+    </script>
