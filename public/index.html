@@ -55,75 +55,97 @@
     </template>
 
 </body>
-    <script>
-        let authenticatedUser = null;
-        
-        (function () {
-            if (! authenticatedUser) {
-                displayLoginForm();
-            } else{
-                displaySubmitRequestForm();
+<script>
+    let authenticatedUser = null;
+
+    (function () {
+        if (!authenticatedUser) {
+            displayLoginForm();
+        } else {
+            displaySubmitRequestForm();
+        }
+    })();
+
+    function addElement(element) {
+        let content = document.getElementById("content");
+        if (content) {
+            if (element) {
+                content.appendChild(element);
+            } else {
+                console.error(new Error(`The element is empty`))
             }
-        })();
-
-        function addElement(element){
-            document.getElementById("content").appendChild(element);
+        } else {
+            console.error(new Error(`There is no content element in the document`))
         }
+    }
 
-        function clearScreen(){
-            document.getElementById("content").innerHTML = "";
-        }
+    function clearScreen() {
+        document.getElementById("content").innerHTML = "";
+    }
 
-        function createElementFromTemplate(templateID){
-            let template = document.querySelector(templateID);
-            let clone = document.importNode(template.content, true);
-            return clone
-        }
+    function createElementFromTemplate(templateID) {
+        let template = document.querySelector(templateID);
+        let clone = document.importNode(template.content, true);
+        return clone
+    }
 
-        function displayLoginForm(){
-            
-            let loginForm = createElementFromTemplate("#authenticateUserUITemplate")
-            //loginForm = window.document.body.appendChild(loginForm);
-            addElement(loginForm);
+    function displayLoginForm() {
 
-            let loginBt = document.querySelector("#loginBt");
-            let createBt = document.querySelector("#createUserBt");
+        let loginForm = createElementFromTemplate("#authenticateUserUITemplate")
+        //loginForm = window.document.body.appendChild(loginForm);
+        addElement(loginForm);
 
-            loginBt.onclick = function(evt){
-                console.log("Login bt clicked")
-                
-                let username = document.getElementById("userName").value;
-                let password = document.getElementById("password").value;
+        let loginBt = document.querySelector("#loginBt");
+        let createBt = document.querySelector("#createUserBt");
 
-                if(username.length > 1 && password.length > 1){
+        loginBt.onclick = function (evt) {
+            console.log("Login bt clicked")
 
+            let username = document.getElementById("userName").value;
+            let password = document.getElementById("password").value;
 
+            if (username.length > 1 && password.length > 1) {
+                // Time to login .....
 
-                } else{
-                    alert("Danger! Danger You are a hacker ;)");
-                }
+                fetch(`/app/user/${username}`).then(data => {
+                    if (data.status === 200) {
+                        return data.json()
+                    } else {
+                        return new PromiseRejectionEvent();
+                    }
+                }).then(json => {
+                    // User is logged inn.
+                    authenticatedUser = JSON.parse(json);
+                    clearScreen();
+                    displaySubmitRequestForm();
+                }).catch(err => {
+                    // Deal withn the error.
+                })
 
+            } else {
+                alert("Danger! Danger You are a hacker ;)");
             }
 
-            createBt.onclick = function(evt){
-                clearScreen();
-                displayCreateUserForm();
-                console.log("Create user bt clicked")
-            }
-
         }
 
-        function displayCreateUserForm(){
-            let element = createElementFromTemplate("#createUserUITemplate")
-            window.document.body.appendChild(element);
-           
+        createBt.onclick = function (evt) {
+            clearScreen();
+            displayCreateUserForm();
+            console.log("Create user bt clicked")
         }
 
-        function displaySubmitRequestForm(){
+    }
 
-        }
-   
-   </script>
+    function displayCreateUserForm() {
+        let element = createElementFromTemplate("#createUserUITemplate")
+        window.document.body.appendChild(element);
+
+    }
+
+    function displaySubmitRequestForm() {
+
+    }
+</script>
 
 
 
