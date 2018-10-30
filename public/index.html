@@ -39,17 +39,18 @@
     </template>
 
     <template id="createUserUITemplate">
-        <form>
+
+        <form id="createUserForm">
             <label for="userName">User name:</label>
-            <input type="text" id="userName">
+            <input type="text" id="userName" required>
 
             <label for="email">E-mail:</label>
-            <input type="email" id="email">
+            <input type="email" id="email" required>
 
             <label for="password">Password:</label>
-            <input type="password" id="password">
+            <input type="password" id="password" required>
 
-            <button type="button">Create</button>
+            <button>Create</button>
         </form>
 
     </template>
@@ -57,6 +58,7 @@
 </body>
 <script>
     let authenticatedUser = null;
+    const USER_ROLE = 42;
 
     (function () {
         if (!authenticatedUser) {
@@ -139,6 +141,48 @@
     function displayCreateUserForm() {
         let element = createElementFromTemplate("#createUserUITemplate")
         window.document.body.appendChild(element);
+
+        let form = document.getElementById("createUserForm");
+        form.onsubmit = function (evt) {
+            // Stops the form from submitting
+            evt.preventDefault();
+            // Username, email and password is validated by browser :)
+            // if values are missing it is our mistake in not finding the correct element.
+            // https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation
+            let userName = document.getElementById("userName").value;
+            let password = document.getElementById("password").value;
+            let email = document.getElementById("email").value;
+            let role = USER_ROLE;
+
+            fetch('/app/user',{
+                method:"POST",
+                body:{
+                    name:userName,
+                    pswHash:password,
+                    userRole:role,
+                    email:email
+                },
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+
+            }).then(function(data){
+                if(data.status < 400){
+                    return data.json();
+                }
+            }).then(function(createdUser){
+                if(createdUser.id){
+                    // We have a newly created user !!
+                    clearScreen();
+                    displayLoginForm();
+                }
+            });
+
+        }
+
+
+
+
 
     }
 
