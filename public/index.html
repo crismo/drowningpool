@@ -156,12 +156,12 @@
 
             fetch('/app/user',{
                 method:"POST",
-                body:{
+                body:JSON.stringify({
                     name:userName,
                     pswHash:password,
                     userRole:role,
                     email:email
-                },
+                }),
                 headers: {
                     "Content-Type": "application/json; charset=utf-8"
                 },
@@ -176,6 +176,8 @@
                     clearScreen();
                     displayLoginForm();
                 }
+            }).catch(err =>{
+                console.error(err);
             });
 
         }
